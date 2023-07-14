@@ -1,0 +1,28 @@
+{
+  "app": {
+    "name": "bromo2",
+    "host": "localhost",
+    "port": "7720",
+    "environment": "development",
+    "log": {
+      "level": "0"
+    },
+    "auth": {
+      "username": "BRM2",
+      "password": "ADMBRM2"
+    }
+  },
+  "database":{
+    "mongodb": {
+      "host": "localhost",
+      "port": "27017",
+      "database": "bromo2",
+      "user": "bromo2",
+      "password": "aQvMm64x8AWfkuzltu99RP48",
+      "collection": {
+        "files": "files"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,238 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "This is API documentation on DataBx Bromo2 Microservices",
+    "version": "1.0.0",
+    "title": "DataBx Bromo2 Microservices",
+    "contact": {
+      "email": "akbar.muhammadakbarmaulana@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags": [
+    {
+      "name": "file",
+      "description": "Simple interact with file mongodb collection"
+    }
+  ],
+  "paths": {
+    "/insert/file": {
+      "post": {
+        "tags": [
+          "file"
+        ],
+        "summary": "Store photo profile",
+        "description": "Return only document profile",
+        "operationId": "StoreFile",
+        "security": [
+          {"basicAuth":  []}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xClientId"
+          },
+          {
+            "$ref": "#/components/parameters/Filename"
+          },
+          {
+            "$ref": "#/components/parameters/RequestId"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/File"
+        },
+        "responses": {
+          "200": {
+            "description": "StoreFile success, with given request",
+            "content": {
+              "application/bson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Check request, body not comply with request rules",
+            "content": {
+              "application/bson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You are not permitted!"
+          },
+          "500": {
+            "description": "General error, system cannot tell you what wrongs",
+            "content": {
+              "application/bson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:7720/bromo2/api/v1"
+    }
+  ],
+  "components": {
+    "requestBodies": {
+      "File": {
+        "required": true,
+        "content": {
+          "application/octet-stream": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "RequestFile": {
+        "type": "string",
+        "additionalProperties": false,
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "maxLength": 36,
+            "pattern": "[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "document_id": {
+                "type": "string"
+              },
+              "filename" : {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ResponseSuccess": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "response_id": {
+            "type": "string",
+            "maxLength": 36,
+            "pattern": "[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}"
+          },
+          "request_id": {
+            "type": "string",
+            "maxLength": 36,
+            "pattern": "[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "response_time": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[0-9]$"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 256,
+            "pattern": "^.$"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "maxProperties": 64
+          }
+        }
+      },
+      "ResponseError": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "response_id": {
+            "type": "string",
+            "maxLength": 36,
+            "pattern": "[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}"
+
+          },
+          "request_id": {
+            "type": "string",
+            "maxLength": 36,
+            "pattern": "[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "response_time": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[0-9]$"
+          },
+          "error": {
+            "type": "string",
+            "maxLength": 256,
+            "pattern": "^.$"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "basicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "parameters": {
+      "xClientId": {
+        "name": "X-Client-ID",
+        "in": "header",
+        "description": "Custom Id that defines you as caller",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "maxLength": 32,
+          "pattern": "[A-Za-z0-9]{32}"
+        }
+      },
+      "Filename": {
+        "name": "filename",
+        "in": "header",
+        "description": "how do you want to name it in documents, either with extension or not",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "maxLength": 128
+        }
+      },
+      "RequestId": {
+        "name": "request_id",
+        "in": "header",
+        "description": "Request id that accompanies, what else request",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "maxLength": 36,
+          "pattern": "[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}"
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "basicAuth": []
+    }
+  ]
+}
