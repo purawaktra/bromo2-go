@@ -19,12 +19,71 @@
     }
   ],
   "paths": {
+    "/select/file": {
+      "get": {
+        "tags": [
+          "file"
+        ],
+        "summary": "Get file by given document id",
+        "description": "This should be return only one file ya",
+        "operationId": "RetrieveFile",
+        "security": [
+          {"basicAuth":  []}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xClientId"
+          },
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DocumentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "RetrieveFile success, with given request",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Check request, header not comply with request rules",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You are not permitted!"
+          },
+          "500": {
+            "description": "General error, system cannot tell you what wrongs",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/insert/file": {
       "post": {
         "tags": [
           "file"
         ],
-        "summary": "Store photo profile",
+        "summary": "Store document on file collection",
         "description": "Return only document profile",
         "operationId": "StoreFile",
         "security": [
@@ -48,9 +107,9 @@
           "200": {
             "description": "StoreFile success, with given request",
             "content": {
-              "application/bson": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseSuccess"
+                  "$ref": "#/components/schemas/Response"
                 }
               }
             }
@@ -58,9 +117,9 @@
           "400": {
             "description": "Check request, body not comply with request rules",
             "content": {
-              "application/bson": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseError"
+                  "$ref": "#/components/schemas/Response"
                 }
               }
             }
@@ -71,9 +130,68 @@
           "500": {
             "description": "General error, system cannot tell you what wrongs",
             "content": {
-              "application/bson": {
+              "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseError"
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delete/file": {
+      "delete": {
+        "tags": [
+          "file"
+        ],
+        "summary": "Delete file based on document id",
+        "description": "Return if state whether success or not",
+        "operationId": "RemoveFile",
+        "security": [
+          {"basicAuth":  []}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xClientId"
+          },
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DocumentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "RemoveFile success, with given request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Check request, header not comply with request rules",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You are not permitted!"
+          },
+          "500": {
+            "description": "General error, system cannot tell you what wrongs",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
                 }
               }
             }
@@ -124,7 +242,7 @@
           }
         }
       },
-      "ResponseSuccess": {
+      "Response": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -147,41 +265,6 @@
             "pattern": "^[0-9]$"
           },
           "message": {
-            "type": "string",
-            "maxLength": 256,
-            "pattern": "^.$"
-          },
-          "data": {
-            "type": "object",
-            "additionalProperties": true,
-            "maxProperties": 64
-          }
-        }
-      },
-      "ResponseError": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "response_id": {
-            "type": "string",
-            "maxLength": 36,
-            "pattern": "[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}"
-
-          },
-          "request_id": {
-            "type": "string",
-            "maxLength": 36,
-            "pattern": "[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}"
-          },
-          "success": {
-            "type": "boolean"
-          },
-          "response_time": {
-            "type": "string",
-            "maxLength": 64,
-            "pattern": "^[0-9]$"
-          },
-          "error": {
             "type": "string",
             "maxLength": 256,
             "pattern": "^.$"
@@ -226,6 +309,17 @@
           "type": "string",
           "maxLength": 36,
           "pattern": "[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{12}"
+        }
+      },
+      "DocumentId": {
+        "name": "document_id",
+        "in": "header",
+        "description": "id that generated by mongodb to store documents",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "maxLength": 24,
+          "pattern": "[A-Za-z0-9]{24}"
         }
       }
     }

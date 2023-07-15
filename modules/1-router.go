@@ -19,5 +19,8 @@ func CreateBromo2Router(engine *gin.Engine, rh Bromo2RequestHandler) Bromo2Route
 
 func (r Bromo2Router) Init(path string) {
 	pathGroup := r.engine.Group(path, utils.CheckBasicAuth)
+	pathGroup.GET("/select/file", r.rh.RetrieveFile)
 	pathGroup.POST("/insert/file", r.rh.StoreFile)
+	pathGroup.DELETE("/delete/file", r.rh.RemoveFile)
+
 }

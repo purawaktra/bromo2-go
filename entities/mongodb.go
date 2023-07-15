@@ -1,6 +1,7 @@
 package entities
 
 type File struct {
-	Name string `bson:"name"`
-	Data []byte `bson:"data"`
+	DocumentId string `bson:"-"`
+	Name       string `bson:"name"`
+	Data       []byte `bson:"data"`
 }
