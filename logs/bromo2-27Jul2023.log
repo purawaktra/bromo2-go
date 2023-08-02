@@ -1,0 +1,5 @@
+{"time":"2023-07-27 19:43:12","message":"============= BROMO2 RUNTIME STARTED ============="}
+{"level":"fatal","error":"connection() error occurred during connection handshake: auth error: sasl conversation error: unable to authenticate using mechanism \"SCRAM-SHA-1\": (AuthenticationFailed) Authentication failed.","function":"CreateMongoDb","message":"failed to ping mongodb","time":"2023-07-27 19:43:12"}
+{"time":"2023-07-27 19:45:59","message":"============= BROMO2 RUNTIME STARTED ============="}
+{"time":"2023-07-27 19:45:59","message":"============= BROMO2 ENGINE STARTING ============="}
+{"time":"2023-07-27 19:45:59","message":"App Address = localhost:7728"}
